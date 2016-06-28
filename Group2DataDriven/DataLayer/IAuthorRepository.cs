@@ -15,5 +15,6 @@ namespace DataLayer
         bool DeleteAuthor(Author author);
         bool DeleteAuthor(int id);
 
+        Author GetAuthorByName(string name);
     }
 }

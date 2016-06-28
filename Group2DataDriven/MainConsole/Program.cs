@@ -19,7 +19,6 @@ namespace MainConsole
                 var author = repository.GetAuthor(authorId);
                 Console.WriteLine(author);
             }
-
         }
     }
 }

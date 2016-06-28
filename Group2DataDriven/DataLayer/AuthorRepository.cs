@@ -10,6 +10,14 @@ namespace DataLayer
 {
     public class AuthorRepository : IAuthorRepository
     {
+        private SqlConnection connection;
+
+        public AuthorRepository()
+        {
+            connection = new SqlConnection(@"Server=.\sqlexpress;Database=SciFiAwards;Trusted_Connection=True;");
+            connection.Open();
+        }
+
         public bool DeleteAuthor(int id)
         {
             throw new NotImplementedException();
@@ -27,31 +35,54 @@ namespace DataLayer
 
         public Author GetAuthor(int id)
         {
-            SqlConnection connection = new SqlConnection(@"Server=.\sqlexpress;Database=SciFiAwards;Trusted_Connection=True;");
-            connection.Open();
-
-            SqlCommand cmd = new SqlCommand("select * from authors where id ="+id.ToString(), connection);
-
+            SqlCommand cmd = new SqlCommand("select * from authors where id = @id", connection);
+            cmd.Parameters.AddWithValue("@id", id);
             var reader = cmd.ExecuteReader();
 
-            if (reader.Read())
-            {
-                var resultId = (int)reader["ID"];
-                var name = (string)reader["Name"];
-                var birthDate = (DateTime)reader["DateOfBirth"];
-                var deathDate = reader["DateOfDeath"] as DateTime?;
-
-                return new Author
-                {
-                    ID = resultId,
-                    Name = name,
-                    BirthDate = birthDate,
-                    DeathDate = deathDate
-                };
-            }
-            else
+            if (!reader.Read()) 
             {
                 return null;
+            }
+
+            var resultId = (int)reader["ID"];
+            var name = (string)reader["Name"];
+            var birthDate = (DateTime)reader["DateOfBirth"];
+            var deathDate = reader["DateOfDeath"] as DateTime?;
+
+            return new Author
+            {
+                ID = resultId,
+                Name = name,
+                BirthDate = birthDate,
+                DeathDate = deathDate
+            };
+        }
+
+        public Author GetAuthorByName(string name)
+        {
+            using (var cmd = new SqlCommand("select top 1 * from authors where name like '%'+@name+'%'", connection))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
+                    var resultId = (int)reader["ID"];
+                    var authorName = (string)reader["Name"];
+                    var birthDate = (DateTime)reader["DateOfBirth"];
+                    var deathDate = reader["DateOfDeath"] as DateTime?;
+
+                    return new Author
+                    {
+                        ID = resultId,
+                        Name = authorName,
+                        BirthDate = birthDate,
+                        DeathDate = deathDate
+                    };
+                }
             }
         }
 
