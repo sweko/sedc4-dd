@@ -12,20 +12,13 @@ namespace MainConsole
     {
         static void Main(string[] args)
         {
-            var author = new Author
+            var repository = new AuthorRepository();
+            while (true)
             {
-                ID = 1,
-                Name = "GRR Martin",
-                BirthDate = new DateTime(1951, 1, 1),
-                DeathDate = null
-            };
-
-            Console.WriteLine(author);
-
-            Console.WriteLine("-------------");
-
-            var a = new AuthorRepository();
-            a.GetAuthor(1);
+                int authorId = int.Parse(Console.ReadLine());
+                var author = repository.GetAuthor(authorId);
+                Console.WriteLine(author);
+            }
 
         }
     }

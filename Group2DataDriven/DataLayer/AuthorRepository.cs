@@ -30,18 +30,29 @@ namespace DataLayer
             SqlConnection connection = new SqlConnection(@"Server=.\sqlexpress;Database=SciFiAwards;Trusted_Connection=True;");
             connection.Open();
 
-            SqlCommand cmd = new SqlCommand("select top 1 ID from authors", connection);
+            SqlCommand cmd = new SqlCommand("select * from authors where id ="+id.ToString(), connection);
 
-            var result = (int)cmd.ExecuteScalar();
+            var reader = cmd.ExecuteReader();
 
-            Console.WriteLine(result);
+            if (reader.Read())
+            {
+                var resultId = (int)reader["ID"];
+                var name = (string)reader["Name"];
+                var birthDate = (DateTime)reader["DateOfBirth"];
+                var deathDate = reader["DateOfDeath"] as DateTime?;
 
-            return null;
-            //connect to database
-            //make query
-            //send query 
-            //get result
-            //create author
+                return new Author
+                {
+                    ID = resultId,
+                    Name = name,
+                    BirthDate = birthDate,
+                    DeathDate = deathDate
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public Author SaveAuthor(Author author)
