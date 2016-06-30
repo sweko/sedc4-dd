@@ -15,8 +15,9 @@ namespace MainConsole
             var repository = new AuthorRepository();
             while (true)
             {
-                int authorId = int.Parse(Console.ReadLine());
-                var result = repository.Get(authorId);
+                //int authorId = int.Parse(Console.ReadLine());
+                var authorName = Console.ReadLine();
+                var result = repository.GetByName(authorName);
                 Console.WriteLine(result);
             }
 

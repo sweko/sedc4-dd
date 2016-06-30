@@ -12,7 +12,9 @@ namespace DataLayer
 
         Author Update(Author author);
 
-        Author Get(int id);
+        Author GetById(int id);
+        Author GetByName(string name);
+
         IEnumerable<Author> GetAll();
 
     }
