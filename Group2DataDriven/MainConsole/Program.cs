@@ -1,7 +1,8 @@
-﻿using DataLayer;
+﻿using BusinessLayer;
 using Entities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,22 +13,27 @@ namespace MainConsole
     {
         static void Main(string[] args)
         {
-            using (var repository = new AuthorRepository())
+            var connectionString = ConfigurationManager.ConnectionStrings["scifi-database"].ConnectionString;
+            using (var repository = new AuthorProvider(connectionString))
             {
-                var author = repository.GetAuthorByName("novo dete");
-
-                repository.DeleteAuthor(author);
-
-                author = new Author
-                {
-                    Name = "novo dete",
-                    BirthDate = new DateTime(1978, 2, 3),
-                    DeathDate = new DateTime(2016, 2, 3),
-                };
-
-                author = repository.SaveAuthor(author);
+                var author = repository.LoadAuthor(92, true);
 
                 Console.WriteLine(author);
+                foreach (var novel in author.Novels)
+                {
+                    Console.WriteLine(novel);
+                }
+
+                //author = new Author
+                //{
+                //    Name = "novo dete",
+                //    BirthDate = new DateTime(1978, 2, 3),
+                //    DeathDate = new DateTime(2016, 2, 3),
+                //};
+
+                //author = repository.SaveAuthor(author);
+
+                //Console.WriteLine(author);
 
 
                 //var authors = repository.GetAllAuthors();

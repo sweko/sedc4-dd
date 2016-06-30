@@ -12,10 +12,9 @@ namespace DataLayer
     {
         private SqlConnection connection;
 
-        public AuthorRepository()
+        public AuthorRepository(string connectionString)
         {
-            //todo: connection string should not be hardcoded
-            connection = new SqlConnection(@"Server=.\sqlexpress;Database=SciFiAwards;Trusted_Connection=True;");
+            connection = new SqlConnection(connectionString);
             connection.Open();
         }
 
