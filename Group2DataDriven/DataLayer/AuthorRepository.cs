@@ -21,7 +21,12 @@ namespace DataLayer
 
         public bool DeleteAuthor(int id)
         {
-            throw new NotImplementedException();
+            using (var cmd = new SqlCommand("delete from authors where id=@id", connection))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                var result = cmd.ExecuteNonQuery();
+                return (result == 1);
+            }
         }
 
         public bool DeleteAuthor(Author author)
@@ -111,7 +116,7 @@ namespace DataLayer
                 cmd.Parameters.AddWithValue("@deathDate", author.DeathDate);
                 cmd.ExecuteNonQuery();
 
-                return author;
+                return GetAuthorByName(author.Name);
             }
         }
 
