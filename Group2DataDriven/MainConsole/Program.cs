@@ -14,12 +14,34 @@ namespace MainConsole
         {
             using (var repository = new AuthorRepository())
             {
-                while (true)
+                var author = repository.GetAuthorByName("novo dete");
+
+                repository.DeleteAuthor(author);
+
+                author = new Author
                 {
-                    string name = Console.ReadLine();
-                    var author = repository.GetAuthorByName(name);
-                    Console.WriteLine(author);
-                }
+                    Name = "novo dete",
+                    BirthDate = new DateTime(1978, 2, 3),
+                    DeathDate = new DateTime(2016, 2, 3),
+                };
+
+                author = repository.SaveAuthor(author);
+
+                Console.WriteLine(author);
+
+
+                //var authors = repository.GetAllAuthors();
+                //foreach (var author in authors)
+                //{
+                //    Console.WriteLine(author);
+                //}
+
+                //while (true)
+                //{
+                //    string name = Console.ReadLine();
+                //    var author = repository.GetAuthorByName(name);
+                //    Console.WriteLine(author);
+                //}
             }
         }
     }

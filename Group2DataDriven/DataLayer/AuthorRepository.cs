@@ -31,32 +31,35 @@ namespace DataLayer
 
         public IEnumerable<Author> GetAllAuthors()
         {
-            throw new NotImplementedException();
+            using (var cmd = new SqlCommand("select * from authors", connection))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var result = new List<Author>();
+                    while (reader.Read())
+                    {
+                       result.Add(GetAuthorFromDataReader(reader));
+                    }
+                    return result;
+                }
+            }
         }
 
         public Author GetAuthor(int id)
         {
-            SqlCommand cmd = new SqlCommand("select * from authors where id = @id", connection);
-            cmd.Parameters.AddWithValue("@id", id);
-            var reader = cmd.ExecuteReader();
-
-            if (!reader.Read()) 
+            using (var cmd = new SqlCommand("select * from authors where id=@id", connection))
             {
-                return null;
+                cmd.Parameters.AddWithValue("@id", id);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
+                    return GetAuthorFromDataReader(reader);
+                }
             }
-
-            var resultId = (int)reader["ID"];
-            var name = (string)reader["Name"];
-            var birthDate = (DateTime)reader["DateOfBirth"];
-            var deathDate = reader["DateOfDeath"] as DateTime?;
-
-            return new Author
-            {
-                ID = resultId,
-                Name = name,
-                BirthDate = birthDate,
-                DeathDate = deathDate
-            };
         }
 
         public Author GetAuthorByName(string name)
@@ -71,30 +74,64 @@ namespace DataLayer
                         return null;
                     }
 
-                    var resultId = (int)reader["ID"];
-                    var authorName = (string)reader["Name"];
-                    var birthDate = (DateTime)reader["DateOfBirth"];
-                    var deathDate = reader["DateOfDeath"] as DateTime?;
-
-                    return new Author
-                    {
-                        ID = resultId,
-                        Name = authorName,
-                        BirthDate = birthDate,
-                        DeathDate = deathDate
-                    };
+                    return GetAuthorFromDataReader(reader);
                 }
             }
         }
 
+        private static Author GetAuthorFromDataReader(SqlDataReader reader)
+        {
+            var resultId = (int)reader["ID"];
+            var authorName = (string)reader["Name"];
+            var birthDate = (DateTime)reader["DateOfBirth"];
+            var deathDate = reader["DateOfDeath"] as DateTime?;
+
+            return new Author
+            {
+                ID = resultId,
+                Name = authorName,
+                BirthDate = birthDate,
+                DeathDate = deathDate
+            };
+        }
+
+
         public Author SaveAuthor(Author author)
         {
-            throw new NotImplementedException();
+            if (author.ID != 0)
+                return UpdateAuthor(author);
+
+            if (ExistByName(author))
+                throw new ArgumentException("author already exists");
+
+            using (var cmd = new SqlCommand("insert into Authors (Name, DateOfBirth, DateOfDeath) values (@name, @birthDate, @deathDate)", connection))
+            {
+                cmd.Parameters.AddWithValue("@name", author.Name);
+                cmd.Parameters.AddWithValue("@birthDate", author.BirthDate);
+                cmd.Parameters.AddWithValue("@deathDate", author.DeathDate);
+                cmd.ExecuteNonQuery();
+
+                return author;
+            }
         }
 
         public Author UpdateAuthor(Author author)
         {
+            if (author.ID == 0)
+                return SaveAuthor(author);
+
             throw new NotImplementedException();
+        }
+
+        private bool ExistByName(Author author)
+        {
+            using (var cmd = new SqlCommand("select count(*) from Authors where Name = @name", connection))
+            {
+                cmd.Parameters.AddWithValue("@name", author.Name);
+                var count = (int)cmd.ExecuteScalar();
+
+                return count == 1;
+            }
         }
 
         #region IDisposable Support
