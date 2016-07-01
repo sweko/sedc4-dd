@@ -12,15 +12,16 @@ namespace MainConsole
     {
         static void Main(string[] args)
         {
-            var repository = new AuthorRepository();
             while (true)
             {
-                //int authorId = int.Parse(Console.ReadLine());
-                var authorName = Console.ReadLine();
-                var result = repository.GetByName(authorName);
-                Console.WriteLine(result);
+                using (var repository = new AuthorRepository())
+                {
+                    //int authorId = int.Parse(Console.ReadLine());
+                    var authorName = Console.ReadLine();
+                    var result = repository.GetByName(authorName);
+                    Console.WriteLine(result);
+                }
             }
-
         }
     }
 }
