@@ -9,9 +9,9 @@ namespace DataLayer
     {
         private SqlConnection connection = new SqlConnection();
 
-        public AuthorRepository()
+        public AuthorRepository(string connectionString)
         {
-            connection.ConnectionString = @"Server=.\sqlexpress; Database=SciFiAwards; Trusted_Connection=True;";
+            connection.ConnectionString = connectionString;
             connection.Open();
         }
 
