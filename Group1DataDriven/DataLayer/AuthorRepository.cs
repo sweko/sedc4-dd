@@ -7,7 +7,7 @@ namespace DataLayer
 {
     public class AuthorRepository : IAuthorRepository
     {
-        SqlConnection connection = new SqlConnection();
+        private SqlConnection connection = new SqlConnection();
 
         public AuthorRepository()
         {
@@ -33,36 +33,37 @@ namespace DataLayer
         public Author GetById(int id)
         {
             //make command
-            SqlCommand command = new SqlCommand();
-            command.CommandText = "select * from Authors where ID=@id";
-            command.Connection = connection;
-            command.Parameters.AddWithValue("@id", id);
-
-            //execute command / get result
-            var reader = command.ExecuteReader();
-
-            //make author from result
-            if (!reader.Read())
+            using (SqlCommand command = new SqlCommand())
             {
-                return null;
+                command.CommandText = "select * from Authors where ID=@id";
+                command.Connection = connection;
+                command.Parameters.AddWithValue("@id", id);
+
+                //execute command / get result
+                using (var reader = command.ExecuteReader())
+                {
+
+                    //make author from result
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
+                    //get things from reader into an object
+                    var authorId = (int)reader["ID"];
+                    var name = (string)reader["Name"];
+                    var birthDate = (DateTime)reader["DateOfBirth"];
+                    var deathDate = reader["DateOfDeath"] as DateTime?;
+
+                    return new Author
+                    {
+                        ID = authorId,
+                        Name = name,
+                        BirthDate = birthDate,
+                        DeathDate = deathDate
+                    };
+                }
             }
-
-            //get things from reader into an object
-            var authorId = (int)reader["ID"];
-            var name = (string)reader["Name"];
-            var birthDate = (DateTime)reader["DateOfBirth"];
-            var deathDate = reader["DateOfDeath"] as DateTime?;
-
-            reader.Dispose();
-            command.Dispose();
-
-            return new Author
-            {
-                ID = authorId,
-                Name = name,
-                BirthDate = birthDate,
-                DeathDate = deathDate
-            };
         }
 
         public Author GetByName(string name)
@@ -108,5 +109,40 @@ namespace DataLayer
         {
             throw new NotImplementedException();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    connection.Dispose();
+                }
+
+                // free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~AuthorRepository() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
