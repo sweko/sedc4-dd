@@ -17,17 +17,26 @@ namespace MainConsole
             Console.WriteLine($"Hello {username}, welcome to the SciFi Database");
 
             var connectionString = ConfigurationManager.ConnectionStrings["SciFiDatabase"].ConnectionString;
-            using (var repository = new AuthorRepository(connectionString))
+            using (var repository = new NovelRepository(connectionString))
             {
-                var author = new Author
+                var novels = repository.GetNovelsForAuthor(92);
+                foreach (var novel in novels)
                 {
-                    Name = "Pero",
-                    BirthDate = new DateTime(1943, 12, 3),
-                    DeathDate = new DateTime(2012, 3, 3)
-                };
+                    Console.WriteLine(novel);
+                }
+            }
 
-                author = repository.Save(author);
-                Console.WriteLine(author);
+            //using (var repository = new AuthorRepository(connectionString))
+            //{
+            //    var author = new Author
+            //    {
+            //        Name = "Pero",
+            //        BirthDate = new DateTime(1943, 12, 3),
+            //        DeathDate = new DateTime(2012, 3, 3)
+            //    };
+
+                //    author = repository.Save(author);
+                //    Console.WriteLine(author);
 
                 //var results = repository.GetAll();
                 //foreach (var author in results)
@@ -43,7 +52,7 @@ namespace MainConsole
                 //    var result = repository.GetByName(authorName);
                 //    Console.WriteLine(result);
                 //}
-            }
+            //}
         }
     }
 }
