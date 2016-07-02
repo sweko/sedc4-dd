@@ -13,9 +13,11 @@ namespace Entities
         public int AuthorID { get; set; }
         public bool IsRead { get; set; }
 
+        public Author Author { get; set; }
+
         public override string ToString()
         {
-            return $"#{ID} {Title} ({IsRead})";
+            return $"#{ID} {Title} by {Author.Name} ({IsRead})";
         }
     }
 }

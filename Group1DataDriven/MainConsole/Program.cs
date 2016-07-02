@@ -1,4 +1,4 @@
-﻿using DataLayer;
+﻿using BusinessLayer;
 using Entities;
 using System;
 using System.Collections.Generic;
@@ -17,13 +17,21 @@ namespace MainConsole
             Console.WriteLine($"Hello {username}, welcome to the SciFi Database");
 
             var connectionString = ConfigurationManager.ConnectionStrings["SciFiDatabase"].ConnectionString;
-            using (var repository = new NovelRepository(connectionString))
+            using (var provider = new AuthorProvider(connectionString))
             {
-                var novels = repository.GetNovelsForAuthor(92);
-                foreach (var novel in novels)
+                var author = provider.LoadData(92);
+                Console.WriteLine(author);
+                foreach (var novel in author.Novels)
                 {
-                    Console.WriteLine(novel);
+                    Console.WriteLine($"   {novel}");
                 }
+
+
+                //var authors = provider.GetAll();
+                //foreach (var author in authors)
+                //{
+                //    Console.WriteLine(author);
+                //}
             }
 
             //using (var repository = new AuthorRepository(connectionString))
