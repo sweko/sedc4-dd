@@ -1,6 +1,9 @@
-﻿using Entities;
+﻿using BusinessLayer;
+using Entities;
+using Entities.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,15 +16,24 @@ namespace MainWeb.Controllers
     {
 
         // GET: api/Authors
-        public IEnumerable<Author> Get()
+        public AutorListViewModel Get()
         {
-            throw new NotImplementedException();
+            var connectionString = ConfigurationManager.ConnectionStrings["scifi-database"].ConnectionString;
+            using (var provider = new AuthorProvider(connectionString))
+            {
+                return AutorListViewModel.FromModel(provider.GetAllAuthors());
+            }
         }
 
         // GET: api/Authors/5
-        public string Get(int id)
+        public AuthorViewModel Get(int id)
         {
-            throw new NotImplementedException();
+            var connectionString = ConfigurationManager.ConnectionStrings["scifi-database"].ConnectionString;
+            using (var provider = new AuthorProvider(connectionString))
+            {
+                var author = provider.LoadAuthor(id, true);
+                return AuthorViewModel.FromModel(author);
+            }
         }
 
         // POST: api/Authors

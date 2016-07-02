@@ -32,6 +32,20 @@ namespace BusinessLayer
             return result;
         }
 
+        public IEnumerable<Author> GetAllAuthors()
+        {
+            var authors = authorRepository.GetAllAuthors();
+
+            //foreach (var author in authors)
+            //{
+            //    author.Novels = novelRepository.GetNovelsByAuthor(author.ID);
+            //}
+
+            return authors;
+        }
+
+
+
         public Author RegisterDeath(Author author, DateTime deathDate, bool isUndead)
         {
             if (author.DeathDate != null && !isUndead)

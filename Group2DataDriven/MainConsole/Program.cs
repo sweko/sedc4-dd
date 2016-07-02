@@ -14,9 +14,9 @@ namespace MainConsole
         static void Main(string[] args)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["scifi-database"].ConnectionString;
-            using (var repository = new AuthorProvider(connectionString))
+            using (var provider = new AuthorProvider(connectionString))
             {
-                var author = repository.LoadAuthor(92, true);
+                var author = provider.LoadAuthor(92, true);
 
                 Console.WriteLine(author);
                 foreach (var novel in author.Novels)

@@ -35,14 +35,18 @@ namespace DataLayer
 
         public IEnumerable<Author> GetAllAuthors()
         {
-            using (var cmd = new SqlCommand("select * from authors", connection))
+            using (var cmd = new SqlCommand(@"select a.ID, a.Name, a.DateOfBirth, a.DateOfDeath, count(*) as NovelCount
+from authors a
+inner
+join Novels n on a.ID = n.AuthorID
+group by a.ID, a.Name, a.DateOfBirth, a.DateOfDeath", connection))
             {
                 using (var reader = cmd.ExecuteReader())
                 {
                     var result = new List<Author>();
                     while (reader.Read())
                     {
-                       result.Add(GetAuthorFromDataReader(reader));
+                       result.Add(GetAuthorFromDataReader(reader, true));
                     }
                     return result;
                 }
@@ -83,19 +87,21 @@ namespace DataLayer
             }
         }
 
-        private static Author GetAuthorFromDataReader(SqlDataReader reader)
+        private static Author GetAuthorFromDataReader(SqlDataReader reader, bool mapNovelCount = false)
         {
             var resultId = (int)reader["ID"];
             var authorName = (string)reader["Name"];
             var birthDate = (DateTime)reader["DateOfBirth"];
             var deathDate = reader["DateOfDeath"] as DateTime?;
+            var novelCount = (mapNovelCount) ? (int)reader["NovelCount"] : (int?)null;
 
             return new Author
             {
                 ID = resultId,
                 Name = authorName,
                 BirthDate = birthDate,
-                DeathDate = deathDate
+                DeathDate = deathDate,
+                NovelCount = novelCount
             };
         }
 
