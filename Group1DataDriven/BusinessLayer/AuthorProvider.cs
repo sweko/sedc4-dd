@@ -28,7 +28,8 @@ namespace BusinessLayer
 
         public IEnumerable<Author> GetAll()
         {
-            return authorRepository.GetAll();
+            var authors = authorRepository.GetAll();
+            return authors;
         }
 
         public Author LoadData(int id)

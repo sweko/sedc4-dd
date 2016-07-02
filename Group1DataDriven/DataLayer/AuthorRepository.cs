@@ -30,7 +30,7 @@ namespace DataLayer
             //make command
             using (SqlCommand command = new SqlCommand())
             {
-                command.CommandText = "select * from Authors";
+                command.CommandText = @"select * from AuthorsNovelCount";
                 command.Connection = connection;
 
                 //execute command / get result
@@ -40,7 +40,7 @@ namespace DataLayer
                     //make author from result
                     while (reader.Read())
                     {
-                        result.Add(GetAuthorForDataReaderRow(reader));
+                        result.Add(GetAuthorForDataReaderRow(reader, true));
                     }
                     return result;
                 }
@@ -93,20 +93,22 @@ namespace DataLayer
             }
         }
 
-        private static Author GetAuthorForDataReaderRow(SqlDataReader reader)
+        private static Author GetAuthorForDataReaderRow(SqlDataReader reader, bool mapNovelCount = false)
         {
             //get things from reader into an object
             var authorId = (int)reader["ID"];
             var authorName = (string)reader["Name"];
             var birthDate = (DateTime)reader["DateOfBirth"];
             var deathDate = reader["DateOfDeath"] as DateTime?;
+            var novelCount = mapNovelCount? (int)reader["NovelCount"] : (int?)null;
 
             return new Author
             {
                 ID = authorId,
                 Name = authorName,
                 BirthDate = birthDate,
-                DeathDate = deathDate
+                DeathDate = deathDate,
+                NovelCount = novelCount
             };
         }
 
