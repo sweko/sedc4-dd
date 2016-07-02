@@ -35,11 +35,7 @@ namespace DataLayer
 
         public IEnumerable<Author> GetAllAuthors()
         {
-            using (var cmd = new SqlCommand(@"select a.ID, a.Name, a.DateOfBirth, a.DateOfDeath, count(*) as NovelCount
-from authors a
-inner
-join Novels n on a.ID = n.AuthorID
-group by a.ID, a.Name, a.DateOfBirth, a.DateOfDeath", connection))
+            using (var cmd = new SqlCommand(@"select * from AuthorsNovelCount", connection))
             {
                 using (var reader = cmd.ExecuteReader())
                 {

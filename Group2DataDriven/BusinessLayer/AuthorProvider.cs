@@ -44,8 +44,6 @@ namespace BusinessLayer
             return authors;
         }
 
-
-
         public Author RegisterDeath(Author author, DateTime deathDate, bool isUndead)
         {
             if (author.DeathDate != null && !isUndead)
