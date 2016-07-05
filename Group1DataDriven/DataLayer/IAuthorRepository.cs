@@ -1,9 +1,10 @@
 ﻿using Entities;
+using System;
 using System.Collections.Generic;
 
 namespace DataLayer
 {
-    public interface IAuthorRepository
+    public interface IAuthorRepository : IDisposable
     {
         bool Delete(Author author);
         bool Delete(int authorID);
@@ -12,7 +13,9 @@ namespace DataLayer
 
         Author Update(Author author);
 
-        Author Get(int id);
+        Author GetById(int id);
+        Author GetByName(string name);
+
         IEnumerable<Author> GetAll();
 
     }

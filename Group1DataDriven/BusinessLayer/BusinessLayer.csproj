@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{373F7681-4871-4F86-8FD9-2C649B37FF3B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8686EF43-ED19-4423-A9E3-1E31D6353D03}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MainConsole</RootNamespace>
-    <AssemblyName>MainConsole</AssemblyName>
+    <RootNamespace>BusinessLayer</RootNamespace>
+    <AssemblyName>BusinessLayer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,19 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AuthorProvider.cs" />
+    <Compile Include="IAuthorProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
-      <Project>{6368844c-17e1-4f88-ba06-0ef2c47ee866}</Project>
-      <Name>BusinessLayer</Name>
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
+      <Project>{dc07ed16-f4bc-4909-b669-c82321f09cbd}</Project>
+      <Name>DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
-      <Project>{8064632f-faf1-4674-bdeb-4ce93e82bbb0}</Project>
+      <Project>{04f42a9d-b4b9-4db0-a953-a8b7cefd443c}</Project>
       <Name>Entities</Name>
     </ProjectReference>
   </ItemGroup>
