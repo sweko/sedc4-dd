@@ -21,6 +21,8 @@ namespace DataLayer
             HasKey(author => author.ID);
             Property(author => author.ID)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            HasMany(a => a.Novels).WithRequired(n => n.Author);
         }
     }
 }

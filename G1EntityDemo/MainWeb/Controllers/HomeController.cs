@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,16 @@ namespace MainWeb.Controllers
     {
         public ActionResult Index()
         {
+            var context = new ScifiContext();
+
+            var heinlein = context.Authors.Single(a => a.ID == 92);
+
+            Console.WriteLine(heinlein);
+            foreach (var novel in heinlein.Novels)
+            {
+                Console.WriteLine($"    {novel}");
+            }
+
             return View();
         }
 
